@@ -4,8 +4,6 @@ pragma solidity ^0.8.4;
 import "./OffchainResolver.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "solmate/auth/Owned.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 
 contract OffchainResolverFactory is Owned {
 
