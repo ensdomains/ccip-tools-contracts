@@ -2,21 +2,21 @@
 pragma solidity ^0.8.4;
 
 import "./SupportsInterface.sol";
-import "./IExtendedResolver.sol";
 import "./SignatureVerifier.sol";
 import "solmate/auth/Owned.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {IExtendedResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IExtendedResolver.sol";
 import {IExtendedDNSResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IExtendedDNSResolver.sol";
 
-interface IResolverService {
-    function resolve(
-        bytes calldata name,
-        bytes calldata data
-    )
-        external
-        view
-        returns (bytes memory result, uint64 expires, bytes memory sig);
-}
+// interface IResolverService {
+//     function resolve(
+//         bytes calldata name,
+//         bytes calldata data
+//     )
+//         external
+//         view
+//         returns (bytes memory result, uint64 expires, bytes memory sig);
+// }
 
 /**
  * Implements an ENS resolver that directs all queries to a CCIP read gateway.
@@ -84,7 +84,7 @@ contract OffchainResolver is
         bytes calldata data
     ) external view override returns (bytes memory) {
         bytes memory callData = abi.encodeWithSelector(
-            IResolverService.resolve.selector,
+            IExtendedResolver.resolve.selector,
             name,
             data
         );
@@ -134,6 +134,7 @@ contract OffchainResolver is
     ) public pure override returns (bool) {
         return
             interfaceID == type(IExtendedResolver).interfaceId ||
+            interfaceID == type(IExtendedDNSResolver).interfaceId ||
             super.supportsInterface(interfaceID);
     }
 
