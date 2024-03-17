@@ -6,6 +6,7 @@ import "./IExtendedResolver.sol";
 import "./SignatureVerifier.sol";
 import "solmate/auth/Owned.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {IExtendedDNSResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IExtendedDNSResolver.sol";
 
 interface IResolverService {
     function resolve(
@@ -22,10 +23,11 @@ interface IResolverService {
  * Callers must implement EIP 3668 and ENSIP 10.
  */
 contract OffchainResolver is
-    IExtendedResolver,
     SupportsInterface,
     Owned,
-    Initializable
+    Initializable,
+    IExtendedResolver,
+    IExtendedDNSResolver
 {
     string public url;
     mapping(address => bool) public signers;
@@ -95,6 +97,21 @@ contract OffchainResolver is
             OffchainResolver.resolveWithProof.selector,
             abi.encode(callData, address(this))
         );
+    }
+
+    /**
+     * Resolves a name with gasless DNSSEC support, as specified by IExtendedDNSResolver.
+     * @param name The DNS-encoded name to resolve.
+     * @param data The ABI encoded data for the underlying resolution function (Eg, addr(bytes32), text(bytes32,string), etc).
+     * @param context The context data from the DNS record.
+     * @return The return data, ABI encoded identically to the underlying function.
+     */
+    function resolve(
+        bytes calldata name,
+        bytes calldata data,
+        bytes calldata context
+    ) external view override returns (bytes memory) {
+        return this.resolve(name, data);
     }
 
     /**
