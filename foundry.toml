@@ -3,4 +3,11 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
+optimizer = true
+optimizer_runs = 20_000
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[profile.ci]
+verbosity = 4
+0x77020a1Cb2d4a0AE6CC773Cc726c1EfdEC0a50ab
