@@ -5,7 +5,7 @@ import "./SupportsInterface.sol";
 import "./IExtendedResolver.sol";
 import "./SignatureVerifier.sol";
 import "solmate/auth/Owned.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/utils/Initializable.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 interface IResolverService {
     function resolve(
@@ -24,7 +24,7 @@ interface IResolverService {
 contract OffchainResolver is
     IExtendedResolver,
     SupportsInterface,
-    Ownable,
+    Owned,
     Initializable
 {
     string public url;
@@ -39,19 +39,21 @@ contract OffchainResolver is
         bytes extraData
     );
 
-    constructor() Ownable(msg.sender) {
+    constructor() Owned(msg.sender) {
         _disableInitializers();
     }
 
     function initialize(
         string memory _url,
-        address[] memory _signers
+        address[] memory _signers,
+        address owner
     ) external initializer {
         url = _url;
         for (uint i = 0; i < _signers.length; i++) {
             signers[_signers[i]] = true;
         }
         emit NewSigners(_signers);
+        Owned(owner);
     }
 
     function makeSignatureHash(

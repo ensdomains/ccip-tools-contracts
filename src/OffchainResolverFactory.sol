@@ -2,16 +2,18 @@
 pragma solidity ^0.8.4;
 
 import "./OffchainResolver.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
+import "solmate/auth/Owned.sol";
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/Clones.sol";
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 
-contract OffchainResolverFactory is Ownable {
+contract OffchainResolverFactory is Owned {
 
     address public offchainResolver;
 
     event OffchainResolverCreated(address newOffchainResolverAddress);
 
-    constructor(address _offchainResolver) Ownable(msg.sender) {
+    constructor(address _offchainResolver) Owned(msg.sender) {
         offchainResolver = _offchainResolver;
     }
 
@@ -21,7 +23,7 @@ contract OffchainResolverFactory is Ownable {
 
     function createOffchainResolver(string memory _url, address[] memory _signers) public {
         address clone = Clones.clone(offchainResolver);
-        OffchainResolver(clone).initialize(_url, _signers);
+        OffchainResolver(clone).initialize(_url, _signers, msg.sender);
         emit OffchainResolverCreated(clone);
     }
 
