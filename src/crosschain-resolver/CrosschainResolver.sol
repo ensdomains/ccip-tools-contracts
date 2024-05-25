@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {EVMFetcher} from "@ensdomains/evm-verifier/contracts/EVMFetcher.sol";
-import {EVMFetchTarget} from "@ensdomains/evm-verifier/contracts/EVMFetchTarget.sol";
-import {IEVMVerifier} from "@ensdomains/evm-verifier/contracts/IEVMVerifier.sol";
+import {EVMFetcher} from "@ensdomains/evm-gateway/contracts/EVMFetcher.sol";
+import {EVMFetchTarget} from "@ensdomains/evm-gateway/contracts/EVMFetchTarget.sol";
+import {IEVMVerifier} from "@ensdomains/evm-gateway/contracts/IEVMVerifier.sol";
 
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {IAddressResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IAddressResolver.sol";

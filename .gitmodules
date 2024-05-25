@@ -12,4 +12,4 @@
 	url = https://github.com/ensdomains/ens-contracts
 [submodule "lib/evm-gateway"]
 	path = lib/evm-gateway
-	url = https://github.com/ensdomains/evm-gateway
+	url = https://github.com/ensdomains/evmgateway
