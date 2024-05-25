@@ -1,2 +1,3 @@
 @openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
 @ensdomains/ens-contracts/=lib/ens-contracts/contracts/
+@ensdomains/evm-gateway/=lib/evm-gateway/contracts/
