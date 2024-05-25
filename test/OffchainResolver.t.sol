@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {OffchainResolverFactory} from "../src/OffchainResolverFactory.sol";
-import {OffchainResolver} from "../src/OffchainResolver.sol";
+import {OffchainResolverFactory} from "../src/offchain-resolver/OffchainResolverFactory.sol";
+import {OffchainResolver} from "../src/offchain-resolver/OffchainResolver.sol";
 
 contract OffchainResolverFactoryTest is Test {
     OffchainResolver public offchainResolver;

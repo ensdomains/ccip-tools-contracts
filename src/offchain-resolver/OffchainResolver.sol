@@ -1,22 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "./SupportsInterface.sol";
-import "./SignatureVerifier.sol";
-import "solmate/auth/Owned.sol";
 import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import {IExtendedResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IExtendedResolver.sol";
 import {IExtendedDNSResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IExtendedDNSResolver.sol";
+import {IAddressResolver} from "@ensdomains/ens-contracts/resolvers/profiles/IAddressResolver.sol";
+import "solmate/auth/Owned.sol";
 
-// interface IResolverService {
-//     function resolve(
-//         bytes calldata name,
-//         bytes calldata data
-//     )
-//         external
-//         view
-//         returns (bytes memory result, uint64 expires, bytes memory sig);
-// }
+import "../utils/SupportsInterface.sol";
+import "./SignatureVerifier.sol";
 
 /**
  * Implements an ENS resolver that directs all queries to a CCIP read gateway.
@@ -27,12 +19,14 @@ contract OffchainResolver is
     Owned,
     Initializable,
     IExtendedResolver,
-    IExtendedDNSResolver
+    IExtendedDNSResolver,
+    IAddressResolver
 {
     string public url;
     mapping(address => bool) public signers;
 
     event NewSigners(address[] signers);
+
     error OffchainLookup(
         address sender,
         string[] urls,
@@ -41,10 +35,17 @@ contract OffchainResolver is
         bytes extraData
     );
 
+    /**
+     * Constructor
+     */
     constructor() Owned(msg.sender) {
         _disableInitializers();
     }
 
+    /**
+     * Initializes the resolver with the given URL and signers.
+     * This is required due to the minimal proxy pattern
+     */
     function initialize(
         string memory _url,
         address[] memory _signers,
@@ -58,6 +59,9 @@ contract OffchainResolver is
         Owned(owner);
     }
 
+    /**
+     * Helper function to generate signatures for the gateway.
+     */
     function makeSignatureHash(
         address target,
         uint64 expires,
@@ -129,15 +133,6 @@ contract OffchainResolver is
         return result;
     }
 
-    function supportsInterface(
-        bytes4 interfaceID
-    ) public pure override returns (bool) {
-        return
-            interfaceID == type(IExtendedResolver).interfaceId ||
-            interfaceID == type(IExtendedDNSResolver).interfaceId ||
-            super.supportsInterface(interfaceID);
-    }
-
     /**
      * Sets the URL of the gateway.
      */
@@ -153,5 +148,17 @@ contract OffchainResolver is
             signers[_signers[i]] = true;
         }
         emit NewSigners(_signers);
+    }
+
+    /**
+     * Implements the ENS resolver interfaces.
+     */
+    function supportsInterface(
+        bytes4 interfaceID
+    ) public pure override returns (bool) {
+        return
+            interfaceID == type(IExtendedResolver).interfaceId ||
+            interfaceID == type(IExtendedDNSResolver).interfaceId ||
+            super.supportsInterface(interfaceID);
     }
 }
